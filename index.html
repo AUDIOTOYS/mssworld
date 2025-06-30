@@ -31,6 +31,26 @@
             padding: 20px;
             color: var(--color-text-dark);
         }
+
+        /* --- NEW PASSWORD PROTECTION STYLES --- */
+        #protected-content {
+            /* Content is hidden by default */
+            display: none;
+        }
+        #access-message {
+            text-align: center;
+            margin: 4em auto 0 auto;
+            background: var(--background-light);
+            padding: 2em 3em;
+            border-radius: 15px;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .access-denied {
+            color: var(--color-accent-red);
+            font-weight: bold;
+        }
+        /* --- END NEW STYLES --- */
         
         .container {
             max-width: 1600px;
@@ -195,13 +215,11 @@
         .problem-table td[contenteditable="true"]:focus { background: var(--color-text-light); outline: 2px solid var(--color-primary); outline-offset: -2px; }
         .problem-table tr:last-child td { border-bottom: none; }
 
-        /* UPDATED: More prominent row highlighting colors */
         .status-not-started { background-color: rgba(211, 47, 47, 0.18) !important; }
         .status-in-progress { background-color: rgba(255, 167, 38, 0.18) !important; }
         .status-completed { background-color: rgba(56, 142, 60, 0.18) !important; }
         .status-needs-review { background-color: rgba(25, 118, 210, 0.18) !important; }
 
-        /* NEW: Rule to ensure row color fills the entire row by overriding cell backgrounds */
         .status-not-started td,
         .status-in-progress td,
         .status-completed td,
@@ -346,374 +364,392 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>MSS World Sound Division</h1>
-            <p>Problem Analysis & Strategic Restructure</p>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card"><div id="totalProblemsStat" class="stat-number">50</div><div class="stat-label">Total Problems</div></div>
-            <div class="stat-card"><div id="categoriesStat" class="stat-number">4</div><div class="stat-label">Categories</div></div>
-            <div class="stat-card"><div id="sectionsStat" class="stat-number">14</div><div class="stat-label">Problem Areas</div></div>
-            <div class="stat-card"><div id="highPriorityStat" class="stat-number">24</div><div class="stat-label">"Do First" Items</div></div>
-        </div>
-        
-        <div class="tabs" id="tabsContainer">
-            <button class="tab active" onclick="showCategory('category-ops', this)">Operational Systems</button>
-            <button class="tab" onclick="showCategory('category-tech', this)">Technical & Equipment</button>
-            <button class="tab" onclick="showCategory('category-hr', this)">Human Resources</button>
-            <button class="tab" onclick="showCategory('category-strategy', this)">Business Strategy</button>
-            <button class="tab" onclick="showCategory('category-matrix', this)">Priority Matrix</button>
-        </div>
-        
-        <div id="categorySectionsContainer">
-            <div id="category-ops" class="category-section active">
-                <div class="problems-grid">
-                    <div class="problem-section priority-high">
-                        <div class="problem-section-header"><h3>Warehouse & Inventory</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">Unorganized warehouse</td><td contenteditable="true">Create a complete list of equipment and design a 3D CAD layout for optimal placement and accessibility</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No proper inventory management</td><td contenteditable="true">Maintain a Google Sheet with equipment categories, quantity, working condition, and usability status</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No record of inventory</td><td contenteditable="true">Develop a dynamic inventory dashboard to show what's in the warehouse and what's assigned to events</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No record of purchases</td><td contenteditable="true">Track purchase requirements in a sheet and mark fulfilled items with quantity and documentation</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No clear list of owned equipment</td><td contenteditable="true">Include items stored in external warehouses in the main or a secondary inventory sheet for accountability</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No shift-wise planning</td><td contenteditable="true">Implement an 8-hour shift rotation system for warehouse staff to balance workload and rest</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Transportation & Logistics</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No transportation trolleys or carts</td><td contenteditable="true">Buy or design sturdy transportation trolleys and carts for heavy equipment handling</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No unloading ramp from truck</td><td contenteditable="true">Purchase and install a proper unloading ramp for safer and faster logistics</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No transport-specific SOP or crew training</td><td contenteditable="true">Develop SOPs for transportation and train crews on rigging, stacking, and safety protocols</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Equipment damaged frequently during internal transportation</td><td contenteditable="true">Train logistics teams on stacking protocols to prevent shocks to fragile equipment in transit</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Poor loading, handling, and case orientation</td><td contenteditable="true">Define loading/unloading sequences and add interlocking SEs to cases for stability</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Cases lack balanced design</td><td contenteditable="true">Redesign tall or poorly balanced cases into modular formats with separated components</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Financial Management</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">Manual, paper-based accounting</td><td contenteditable="true">Transition accounting to digital platforms like QuickBooks or Zoho Books</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Undocumented transactions</td><td contenteditable="true">Mandate digital records for every transaction with upload of bills or UPI screenshots</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No accountability or tracking</td><td contenteditable="true">Track all fund movements in a centralized digital sheet or software with access logs</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Internal chaos risking major loss</td><td contenteditable="true">Designate a finance operations coordinator and standardize all fund release procedures</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Client Coordination</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No pre-event checklist or rider shared with clients</td><td contenteditable="true">Send a checklist to clients before events with what's needed from their end: power, crew, layout, show flow</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                </div>
-            </div>
+<body onload="askForPassword()">
 
-            <div id="category-tech" class="category-section">
-                <div class="problems-grid">
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Equipment Quality & Handling</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">Equipment condition not verified or maintained</td><td contenteditable="true">Instruct technicians to flag faulty equipment, and update its status in both event and warehouse sheets</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Wrong sizes ordered leading to waste</td><td contenteditable="true">Ensure future purchases are guided by proper measurement and confirmed technical needs</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Expensive or unsuitable gear purchased without technical input</td><td contenteditable="true">Discuss purchases with reliable experts, justify reasons with logic and stats before ordering</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Poor purchase decisions like AKG C414 for live use</td><td contenteditable="true">Do not purchase gear based on studio-focused riders; prioritize use-case and environment fit</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Frequent misuse or mishandling by technicians</td><td contenteditable="true">Educate technicians on proper use protocols and create accountability for careless handling</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Gear damage due to untrained operations</td><td contenteditable="true">Train teams to verify presets, avoid hot-patching, and handle fibers, racks, and files safely</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Equipment cases and frames are poorly designed</td><td contenteditable="true">Assess current cases and modify usage strategies to maximize utility with what's available</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Maintenance & Servicing</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No dedicated space for servicing and maintenance</td><td contenteditable="true">Establish a dedicated room for equipment servicing, testing, firmware updates, and quality control</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No accountability for faulty equipment</td><td contenteditable="true">Track faulty gear using logs updated by technicians; maintain a repair status sheet accessible to all</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No structured way to report gear issues from site</td><td contenteditable="true">Integrate fault reports into event gear sheets with checklists to ensure warehouse teams are informed</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Safety & Rigging</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">Equipment used in unsafe conditions</td><td contenteditable="true">Review environmental risks pre-event and request client provisions like tents and AC for protection</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No protective measure to shield the gear from weather</td><td contenteditable="true">Keep rain covers, sheds, and emergency protective equipment readily available for outdoor events</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Unsafe rigging practices (e.g., using one motor for K2)</td><td contenteditable="true">Always use two-point rigging methods for heavy and high-value gear like K2</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No proper rigging safety gear</td><td contenteditable="true">Develop and fabricate rigging gear and accessories based on field-tested CAD designs</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Missing helmets, gloves, harnesses, boots</td><td contenteditable="true">Assemble a dedicated PPE box and make its use mandatory at every event site</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Crew often ignores safe signal levels</td><td contenteditable="true">Train technicians on signal levels and enforce safety protocols to prevent damage to monitors or gear</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                           </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                     <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Power Management</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No proper power planning</td><td contenteditable="true">Pre-plan power needs including cable lengths, load calculations, and backup with documentation</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No standardized gear for distribution</td><td contenteditable="true">Use LYNTEC or similar standardized power distribution systems with app-based control</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No monitoring for safe power loads</td><td contenteditable="true">Implement software tools like Spike to monitor power usage and detect load issues in real-time</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No technical understanding of power needs</td><td contenteditable="true">Create and enforce an SOP covering equipment power specs and safe connection practices</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="category-hr" class="category-section">
-                 <div class="problems-grid">
-                    <div class="problem-section priority-medium">
-                         <div class="problem-section-header"><h3>Training & Development</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">Untrained professionals</td><td contenteditable="true">Host structured in-house training programs on signal chains, amp loading, and PA design</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No mentoring or upskilling</td><td contenteditable="true">Identify talents in the team and mentor them into specialized roles based on their strengths</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Seniors resistant to learning</td><td contenteditable="true">Involve seniors in upskilling programs; incentivize adaptability and technical development</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Communication & Structure</h3></div>
-                        <table class="problem-table">
-                           <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">Communication gap across roles</td><td contenteditable="true">Assign clear responsibilities to each team member such as rigging, stage support, and inventory support</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Meetings held without purpose, prep, or follow-up</td><td contenteditable="true">Prepare meeting agendas beforehand, assign moderators, and record outcomes for follow-up</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No formal internal communication system</td><td contenteditable="true">Implement Slack or a structured WhatsApp Business system with channels for each department</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No shared calendar or task board</td><td contenteditable="true">Create a shared Google Calendar and a task board (Trello/Notion) for all team activities</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-high">
-                         <div class="problem-section-header"><h3>Management & Culture</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No smart or tech-savvy warehouse manager</td><td contenteditable="true">Hire a warehouse manager with technical knowledge of audio gear and operational workflows</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Crew often overstretched, sometimes untrained labor used</td><td contenteditable="true">Plan team schedules and avoid sending untrained labor; assign tasks based on skill level</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Juniors overworked and undervalued</td><td contenteditable="true">Implement a shift system and limit continuous work hours to protect juniors from burnout</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No ownership or accountability for gear misuse</td><td contenteditable="true">Introduce gear check-out logs and link damage accountability to individuals or teams</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                 </div>
-            </div>
-
-            <div id="category-strategy" class="category-section">
-                <div class="problems-grid">
-                    <div class="problem-section priority-medium">
-                         <div class="problem-section-header"><h3>Vision & Strategy</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No clear business or revenue model</td><td contenteditable="true">Write and maintain a business model to clarify value streams and revenue plans</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No growth or investment roadmap</td><td contenteditable="true">Set goals and a timeline for growth and investment, backed by logic and internal data</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No event-wise profitability tracking</td><td contenteditable="true">Design a report format that calculates costs, profits, ROI, and effort for every event</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No business automation</td><td contenteditable="true">Plan for automation only after internal workflows are stabilized and documented</td><td contenteditable="true">ELIMINATE/LATER</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No event-type breakdown</td><td contenteditable="true">Make a categorized event tracker sheet with dates and gear</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No event documentation</td><td contenteditable="true">Assign a media person per event to document equipment, team, and results for internal use</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No data used to guide strategic decisions</td><td contenteditable="true">Aggregate monthly data from events to identify trends and inform gear, pricing, and HR strategy</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                    <div class="problem-section priority-low">
-                         <div class="problem-section-header"><h3>Marketing & Digital Presence</h3></div>
-                        <table class="problem-table">
-                            <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
-                            <tbody>
-                                <tr class="status-not-started"><td contenteditable="true">No website</td><td contenteditable="true">Create a simple company website with gear catalog, services, team, and contact info</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Poor social media presence</td><td contenteditable="true">Schedule regular social media posts with past work, team intros, BTS content, and client tags</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">Strong reputation not leveraged</td><td contenteditable="true">Build company identity by showcasing consistent values, delivery, and testimonials—not just individuals</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                                <tr class="status-not-started"><td contenteditable="true">No content from past work used to promote business</td><td contenteditable="true">Use past event photos and stats to create content like case studies, highlight reels, and infographics</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
-                            </tbody>
-                        </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
-                    </div>
-                </div>
+    <div id="protected-content">
+        <div class="container">
+            <div class="header">
+                <h1>MSS World Sound Division</h1>
+                <p>Problem Analysis & Strategic Restructure</p>
             </div>
             
-            <div id="category-matrix" class="category-section">
-                <div class="center-title"><h2 class="section-title">Priority Action Matrix</h2></div>
-                <div class="priority-matrix-grid">
-                    <div class="priority-quadrant quadrant-do-first">
-                        <h3>DO FIRST <span>(Urgent & Important)</span></h3>
-                        <ul>
-                            <li><b>Ops:</b> Inventory (4), Transport SOPs (2), Financial Systems (4), Client Coordination (1)</li>
-                            <li><b>Tech:</b> Equipment Handling (3), Maintenance Reporting (2), Safety Protocols (3), Power Planning (2)</li>
-                            <li><b>HR:</b> Communication (3), Management Structure (4)</li>
-                        </ul>
+            <div class="stats-grid">
+                <div class="stat-card"><div id="totalProblemsStat" class="stat-number">50</div><div class="stat-label">Total Problems</div></div>
+                <div class="stat-card"><div id="categoriesStat" class="stat-number">4</div><div class="stat-label">Categories</div></div>
+                <div class="stat-card"><div id="sectionsStat" class="stat-number">14</div><div class="stat-label">Problem Areas</div></div>
+                <div class="stat-card"><div id="highPriorityStat" class="stat-number">24</div><div class="stat-label">"Do First" Items</div></div>
+            </div>
+            
+            <div class="tabs" id="tabsContainer">
+                <button class="tab active" onclick="showCategory('category-ops', this)">Operational Systems</button>
+                <button class="tab" onclick="showCategory('category-tech', this)">Technical & Equipment</button>
+                <button class="tab" onclick="showCategory('category-hr', this)">Human Resources</button>
+                <button class="tab" onclick="showCategory('category-strategy', this)">Business Strategy</button>
+                <button class="tab" onclick="showCategory('category-matrix', this)">Priority Matrix</button>
+            </div>
+            
+            <div id="categorySectionsContainer">
+                <div id="category-ops" class="category-section active">
+                    <div class="problems-grid">
+                        <div class="problem-section priority-high">
+                            <div class="problem-section-header"><h3>Warehouse & Inventory</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">Unorganized warehouse</td><td contenteditable="true">Create a complete list of equipment and design a 3D CAD layout for optimal placement and accessibility</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No proper inventory management</td><td contenteditable="true">Maintain a Google Sheet with equipment categories, quantity, working condition, and usability status</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No record of inventory</td><td contenteditable="true">Develop a dynamic inventory dashboard to show what's in the warehouse and what's assigned to events</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No record of purchases</td><td contenteditable="true">Track purchase requirements in a sheet and mark fulfilled items with quantity and documentation</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No clear list of owned equipment</td><td contenteditable="true">Include items stored in external warehouses in the main or a secondary inventory sheet for accountability</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No shift-wise planning</td><td contenteditable="true">Implement an 8-hour shift rotation system for warehouse staff to balance workload and rest</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Transportation & Logistics</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No transportation trolleys or carts</td><td contenteditable="true">Buy or design sturdy transportation trolleys and carts for heavy equipment handling</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No unloading ramp from truck</td><td contenteditable="true">Purchase and install a proper unloading ramp for safer and faster logistics</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No transport-specific SOP or crew training</td><td contenteditable="true">Develop SOPs for transportation and train crews on rigging, stacking, and safety protocols</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Equipment damaged frequently during internal transportation</td><td contenteditable="true">Train logistics teams on stacking protocols to prevent shocks to fragile equipment in transit</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Poor loading, handling, and case orientation</td><td contenteditable="true">Define loading/unloading sequences and add interlocking SEs to cases for stability</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Cases lack balanced design</td><td contenteditable="true">Redesign tall or poorly balanced cases into modular formats with separated components</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Financial Management</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">Manual, paper-based accounting</td><td contenteditable="true">Transition accounting to digital platforms like QuickBooks or Zoho Books</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Undocumented transactions</td><td contenteditable="true">Mandate digital records for every transaction with upload of bills or UPI screenshots</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No accountability or tracking</td><td contenteditable="true">Track all fund movements in a centralized digital sheet or software with access logs</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Internal chaos risking major loss</td><td contenteditable="true">Designate a finance operations coordinator and standardize all fund release procedures</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Client Coordination</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No pre-event checklist or rider shared with clients</td><td contenteditable="true">Send a checklist to clients before events with what's needed from their end: power, crew, layout, show flow</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
                     </div>
-                    <div class="priority-quadrant quadrant-schedule">
-                        <h3>SCHEDULE <span>(Not Urgent & Important)</span></h3>
-                        <ul>
-                            <li><b>Ops:</b> Warehouse Layout (1), Case Design (2)</li>
-                            <li><b>Tech:</b> Purchase Planning (3), Maintenance Space (1), Rigging Gear (1)</li>
-                            <li><b>HR:</b> Training Programs (3)</li>
-                            <li><b>Strategy:</b> Business Planning (7)</li>
-                        </ul>
+                </div>
+
+                <div id="category-tech" class="category-section">
+                    <div class="problems-grid">
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Equipment Quality & Handling</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">Equipment condition not verified or maintained</td><td contenteditable="true">Instruct technicians to flag faulty equipment, and update its status in both event and warehouse sheets</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Wrong sizes ordered leading to waste</td><td contenteditable="true">Ensure future purchases are guided by proper measurement and confirmed technical needs</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Expensive or unsuitable gear purchased without technical input</td><td contenteditable="true">Discuss purchases with reliable experts, justify reasons with logic and stats before ordering</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Poor purchase decisions like AKG C414 for live use</td><td contenteditable="true">Do not purchase gear based on studio-focused riders; prioritize use-case and environment fit</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Frequent misuse or mishandling by technicians</td><td contenteditable="true">Educate technicians on proper use protocols and create accountability for careless handling</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Gear damage due to untrained operations</td><td contenteditable="true">Train teams to verify presets, avoid hot-patching, and handle fibers, racks, and files safely</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Equipment cases and frames are poorly designed</td><td contenteditable="true">Assess current cases and modify usage strategies to maximize utility with what's available</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Maintenance & Servicing</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No dedicated space for servicing and maintenance</td><td contenteditable="true">Establish a dedicated room for equipment servicing, testing, firmware updates, and quality control</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No accountability for faulty equipment</td><td contenteditable="true">Track faulty gear using logs updated by technicians; maintain a repair status sheet accessible to all</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No structured way to report gear issues from site</td><td contenteditable="true">Integrate fault reports into event gear sheets with checklists to ensure warehouse teams are informed</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Safety & Rigging</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">Equipment used in unsafe conditions</td><td contenteditable="true">Review environmental risks pre-event and request client provisions like tents and AC for protection</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No protective measure to shield the gear from weather</td><td contenteditable="true">Keep rain covers, sheds, and emergency protective equipment readily available for outdoor events</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Unsafe rigging practices (e.g., using one motor for K2)</td><td contenteditable="true">Always use two-point rigging methods for heavy and high-value gear like K2</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No proper rigging safety gear</td><td contenteditable="true">Develop and fabricate rigging gear and accessories based on field-tested CAD designs</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Missing helmets, gloves, harnesses, boots</td><td contenteditable="true">Assemble a dedicated PPE box and make its use mandatory at every event site</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Crew often ignores safe signal levels</td><td contenteditable="true">Train technicians on signal levels and enforce safety protocols to prevent damage to monitors or gear</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                               </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                         <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Power Management</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No proper power planning</td><td contenteditable="true">Pre-plan power needs including cable lengths, load calculations, and backup with documentation</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No standardized gear for distribution</td><td contenteditable="true">Use LYNTEC or similar standardized power distribution systems with app-based control</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No monitoring for safe power loads</td><td contenteditable="true">Implement software tools like Spike to monitor power usage and detect load issues in real-time</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No technical understanding of power needs</td><td contenteditable="true">Create and enforce an SOP covering equipment power specs and safe connection practices</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
                     </div>
-                    <div class="priority-quadrant quadrant-delegate">
-                        <h3>DELEGATE <span>(Urgent & Not Important)</span></h3>
-                        <ul>
-                             <li><b>Ops:</b> Equipment Purchases (2)</li>
-                             <li><b>Tech:</b> Weather Protection (1), Power Systems (2), Case Mods (1)</li>
-                             <li><b>HR:</b> Task Management (1)</li>
-                             <li><b>Strategy:</b> Content Creation (1)</li>
-                        </ul>
-                    </div>
-                    <div class="priority-quadrant quadrant-eliminate">
-                        <h3>ELIMINATE / LATER <span>(Not Urgent & Not Important)</span></h3>
-                        <ul>
-                            <li><b>Strategy:</b> Defer business automation until core workflows are stable and documented.</li>
-                        </ul>
+                </div>
+
+                <div id="category-hr" class="category-section">
+                     <div class="problems-grid">
+                        <div class="problem-section priority-medium">
+                             <div class="problem-section-header"><h3>Training & Development</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">Untrained professionals</td><td contenteditable="true">Host structured in-house training programs on signal chains, amp loading, and PA design</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No mentoring or upskilling</td><td contenteditable="true">Identify talents in the team and mentor them into specialized roles based on their strengths</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Seniors resistant to learning</td><td contenteditable="true">Involve seniors in upskilling programs; incentivize adaptability and technical development</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Communication & Structure</h3></div>
+                            <table class="problem-table">
+                               <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">Communication gap across roles</td><td contenteditable="true">Assign clear responsibilities to each team member such as rigging, stage support, and inventory support</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Meetings held without purpose, prep, or follow-up</td><td contenteditable="true">Prepare meeting agendas beforehand, assign moderators, and record outcomes for follow-up</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No formal internal communication system</td><td contenteditable="true">Implement Slack or a structured WhatsApp Business system with channels for each department</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No shared calendar or task board</td><td contenteditable="true">Create a shared Google Calendar and a task board (Trello/Notion) for all team activities</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-high">
+                             <div class="problem-section-header"><h3>Management & Culture</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No smart or tech-savvy warehouse manager</td><td contenteditable="true">Hire a warehouse manager with technical knowledge of audio gear and operational workflows</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Crew often overstretched, sometimes untrained labor used</td><td contenteditable="true">Plan team schedules and avoid sending untrained labor; assign tasks based on skill level</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Juniors overworked and undervalued</td><td contenteditable="true">Implement a shift system and limit continuous work hours to protect juniors from burnout</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No ownership or accountability for gear misuse</td><td contenteditable="true">Introduce gear check-out logs and link damage accountability to individuals or teams</td><td contenteditable="true">DO FIRST</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                     </div>
+                </div>
+
+                <div id="category-strategy" class="category-section">
+                    <div class="problems-grid">
+                        <div class="problem-section priority-medium">
+                             <div class="problem-section-header"><h3>Vision & Strategy</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No clear business or revenue model</td><td contenteditable="true">Write and maintain a business model to clarify value streams and revenue plans</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No growth or investment roadmap</td><td contenteditable="true">Set goals and a timeline for growth and investment, backed by logic and internal data</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No event-wise profitability tracking</td><td contenteditable="true">Design a report format that calculates costs, profits, ROI, and effort for every event</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No business automation</td><td contenteditable="true">Plan for automation only after internal workflows are stabilized and documented</td><td contenteditable="true">ELIMINATE/LATER</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No event-type breakdown</td><td contenteditable="true">Make a categorized event tracker sheet with dates and gear</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No event documentation</td><td contenteditable="true">Assign a media person per event to document equipment, team, and results for internal use</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No data used to guide strategic decisions</td><td contenteditable="true">Aggregate monthly data from events to identify trends and inform gear, pricing, and HR strategy</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
+                        <div class="problem-section priority-low">
+                             <div class="problem-section-header"><h3>Marketing & Digital Presence</h3></div>
+                            <table class="problem-table">
+                                <thead><tr><th>Problem</th><th>Solution</th><th class="priority-col">Priority</th><th class="status-col">Action Status</th><th>Remarks / Notes</th><th class="actions-col">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr class="status-not-started"><td contenteditable="true">No website</td><td contenteditable="true">Create a simple company website with gear catalog, services, team, and contact info</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Poor social media presence</td><td contenteditable="true">Schedule regular social media posts with past work, team intros, BTS content, and client tags</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">Strong reputation not leveraged</td><td contenteditable="true">Build company identity by showcasing consistent values, delivery, and testimonials—not just individuals</td><td contenteditable="true">SCHEDULE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                    <tr class="status-not-started"><td contenteditable="true">No content from past work used to promote business</td><td contenteditable="true">Use past event photos and stats to create content like case studies, highlight reels, and infographics</td><td contenteditable="true">DELEGATE</td><td><select class="status-select" onchange="updateRowStatus(this)"><option selected>Not Started</option><option>In Progress</option><option>Completed</option><option>Needs Review</option></select></td><td contenteditable="true"></td><td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+                                </tbody>
+                            </table><button class="add-row-btn" onclick="addRow(this)">+ Add New Row</button>
+                        </div>
                     </div>
                 </div>
                 
-                 <div class="center-title"><h2 class="section-title">Strategic Recommendations</h2></div>
-                <div class="recommendations-grid">
-                    <div class="rec-card rec-card-phase1">
-                        <h3>Phase 1: Stabilize the Foundation</h3>
-                        <p class="phase-subtitle">Timeline: Next 30-60 Days</p>
-                        <p>This phase is critical for stopping operational bleeding and establishing control. The focus is entirely on the <strong>DO FIRST</strong> items to create a stable base for future growth.</p>
-                        <ul>
-                            <li>Implement digital inventory and financial tracking immediately.</li>
-                            <li>Standardize core safety, transport, and power SOPs.</li>
-                            <li>Clarify team roles, improve communication channels (e.g., Slack), and establish accountability for gear handling.</li>
-                            <li>Hire a technically competent warehouse manager.</li>
-                        </ul>
+                <div id="category-matrix" class="category-section">
+                    <div class="center-title"><h2 class="section-title">Priority Action Matrix</h2></div>
+                    <div class="priority-matrix-grid">
+                        <div class="priority-quadrant quadrant-do-first">
+                            <h3>DO FIRST <span>(Urgent & Important)</span></h3>
+                            <ul>
+                                <li><b>Ops:</b> Inventory (4), Transport SOPs (2), Financial Systems (4), Client Coordination (1)</li>
+                                <li><b>Tech:</b> Equipment Handling (3), Maintenance Reporting (2), Safety Protocols (3), Power Planning (2)</li>
+                                <li><b>HR:</b> Communication (3), Management Structure (4)</li>
+                            </ul>
+                        </div>
+                        <div class="priority-quadrant quadrant-schedule">
+                            <h3>SCHEDULE <span>(Not Urgent & Important)</span></h3>
+                            <ul>
+                                <li><b>Ops:</b> Warehouse Layout (1), Case Design (2)</li>
+                                <li><b>Tech:</b> Purchase Planning (3), Maintenance Space (1), Rigging Gear (1)</li>
+                                <li><b>HR:</b> Training Programs (3)</li>
+                                <li><b>Strategy:</b> Business Planning (7)</li>
+                            </ul>
+                        </div>
+                        <div class="priority-quadrant quadrant-delegate">
+                            <h3>DELEGATE <span>(Urgent & Not Important)</span></h3>
+                            <ul>
+                                 <li><b>Ops:</b> Equipment Purchases (2)</li>
+                                 <li><b>Tech:</b> Weather Protection (1), Power Systems (2), Case Mods (1)</li>
+                                 <li><b>HR:</b> Task Management (1)</li>
+                                 <li><b>Strategy:</b> Content Creation (1)</li>
+                            </ul>
+                        </div>
+                        <div class="priority-quadrant quadrant-eliminate">
+                            <h3>ELIMINATE / LATER <span>(Not Urgent & Not Important)</span></h3>
+                            <ul>
+                                <li><b>Strategy:</b> Defer business automation until core workflows are stable and documented.</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="rec-card rec-card-phase2">
-                        <h3>Phase 2: Optimize & Systematize</h3>
-                        <p class="phase-subtitle">Timeline: Next 2-6 Months</p>
-                        <p>With basic controls in place, this phase focuses on efficiency, quality, and team development. Address all <strong>SCHEDULE</strong> and <strong>DELEGATE</strong> items.</p>
-                        <ul>
-                            <li>Develop and begin structured training and upskilling programs.</li>
-                            <li>Begin documenting business processes and tracking event profitability.</li>
-                            <li>Create a company website and begin leveraging past work for marketing.</li>
-                            <li>Invest in physical infrastructure like a maintenance room and better transport gear.</li>
-                        </ul>
-                    </div>
-                    <div class="rec-card rec-card-phase3">
-                        <h3>Phase 3: Strategic Growth</h3>
-                        <p class="phase-subtitle">Timeline: 6-12 Months & Beyond</p>
-                        <p>Once operations are smooth and data is being collected, focus on long-term strategy and market positioning. This phase builds on a solid foundation.</p>
-                        <ul>
-                            <li>Use collected data (profitability, gear usage) to create a formal business model and investment roadmap.</li>
-                            <li>Build a strong company brand identity separate from individuals.</li>
-                            <li>Explore strategic gear investments based on trend data.</li>
-                            <li>Re-evaluate and consider automation opportunities now that workflows are mature.</li>
-                        </ul>
+                    
+                     <div class="center-title"><h2 class="section-title">Strategic Recommendations</h2></div>
+                    <div class="recommendations-grid">
+                        <div class="rec-card rec-card-phase1">
+                            <h3>Phase 1: Stabilize the Foundation</h3>
+                            <p class="phase-subtitle">Timeline: Next 30-60 Days</p>
+                            <p>This phase is critical for stopping operational bleeding and establishing control. The focus is entirely on the <strong>DO FIRST</strong> items to create a stable base for future growth.</p>
+                            <ul>
+                                <li>Implement digital inventory and financial tracking immediately.</li>
+                                <li>Standardize core safety, transport, and power SOPs.</li>
+                                <li>Clarify team roles, improve communication channels (e.g., Slack), and establish accountability for gear handling.</li>
+                                <li>Hire a technically competent warehouse manager.</li>
+                            </ul>
+                        </div>
+                        <div class="rec-card rec-card-phase2">
+                            <h3>Phase 2: Optimize & Systematize</h3>
+                            <p class="phase-subtitle">Timeline: Next 2-6 Months</p>
+                            <p>With basic controls in place, this phase focuses on efficiency, quality, and team development. Address all <strong>SCHEDULE</strong> and <strong>DELEGATE</strong> items.</p>
+                            <ul>
+                                <li>Develop and begin structured training and upskilling programs.</li>
+                                <li>Begin documenting business processes and tracking event profitability.</li>
+                                <li>Create a company website and begin leveraging past work for marketing.</li>
+                                <li>Invest in physical infrastructure like a maintenance room and better transport gear.</li>
+                            </ul>
+                        </div>
+                        <div class="rec-card rec-card-phase3">
+                            <h3>Phase 3: Strategic Growth</h3>
+                            <p class="phase-subtitle">Timeline: 6-12 Months & Beyond</p>
+                            <p>Once operations are smooth and data is being collected, focus on long-term strategy and market positioning. This phase builds on a solid foundation.</p>
+                            <ul>
+                                <li>Use collected data (profitability, gear usage) to create a formal business model and investment roadmap.</li>
+                                <li>Build a strong company brand identity separate from individuals.</li>
+                                <li>Explore strategic gear investments based on trend data.</li>
+                                <li>Re-evaluate and consider automation opportunities now that workflows are mature.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <p id="access-message"></p>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        updateStats();
-        // Initialize row colors on page load
-        document.querySelectorAll('.status-select').forEach(select => updateRowStatus(select));
-    });
+        /**
+         * NEW: Asks for password and reveals content if correct.
+         */
+        function askForPassword() {
+            // 1. Define your password here
+            const correctPassword = "password123";
 
-    /**
-     * Updates the background color of a table row based on the selected status.
-     * @param {HTMLSelectElement} selectElement The dropdown that was changed.
-     */
-    function updateRowStatus(selectElement) {
-        const row = selectElement.closest('tr');
-        if (!row) return;
+            // 2. Ask the user for the password
+            let userPassword = prompt("Please enter the password to view this page:");
 
-        // Create a status class from the selected option value (e.g., "In Progress" -> "status-in-progress")
-        const selectedStatus = 'status-' + selectElement.value.replace(/\s+/g, '-').toLowerCase();
+            // 3. Check if the password is correct
+            if (userPassword === correctPassword) {
+                // If correct, reveal the hidden content
+                document.getElementById("protected-content").style.display = "block";
+            } else if (userPassword !== null) { // Show message only if user entered something
+                // If incorrect, show an "Access Denied" message
+                document.getElementById("access-message").innerHTML = '<h2 class="access-denied">Access Denied</h2><p>The password you entered is incorrect.</p>';
+            }
+        }
 
-        // List of all possible status classes to ensure only one is applied at a time
-        const statusClasses = ['status-not-started', 'status-in-progress', 'status-completed', 'status-needs-review'];
-        
-        // Remove any old status classes from the row
-        row.classList.remove(...statusClasses);
-        
-        // Add the new class corresponding to the current selection
-        row.classList.add(selectedStatus);
-    }
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            // Initialize row colors on page load
+            document.querySelectorAll('.status-select').forEach(select => updateRowStatus(select));
+        });
 
-    function showCategory(categoryId, clickedTab) {
-        document.querySelectorAll('.category-section').forEach(section => section.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        const sectionToShow = document.getElementById(categoryId);
-        if (sectionToShow) sectionToShow.classList.add('active');
-        clickedTab.classList.add('active');
-    }
+        /**
+         * Updates the background color of a table row based on the selected status.
+         * @param {HTMLSelectElement} selectElement The dropdown that was changed.
+         */
+        function updateRowStatus(selectElement) {
+            const row = selectElement.closest('tr');
+            if (!row) return;
 
-    function addRow(button) {
-        const tableBody = button.closest('.problem-section').querySelector('tbody');
-        const newRow = tableBody.insertRow();
-        newRow.innerHTML = `
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td>
-                <select class="status-select" onchange="updateRowStatus(this)">
-                    <option selected>Not Started</option>
-                    <option>In Progress</option>
-                    <option>Completed</option>
-                    <option>Needs Review</option>
-                </select>
-            </td>
-            <td contenteditable="true"></td>
-            <td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td>
-        `;
-        // Apply initial status class to the new row
-        newRow.classList.add('status-not-started');
-        newRow.cells[0].focus();
-        updateStats();
-    }
+            const selectedStatus = 'status-' + selectElement.value.replace(/\s+/g, '-').toLowerCase();
+            const statusClasses = ['status-not-started', 'status-in-progress', 'status-completed', 'status-needs-review'];
+            
+            row.classList.remove(...statusClasses);
+            row.classList.add(selectedStatus);
+        }
 
-    function deleteRow(button) {
-        if (confirm('Are you sure you want to delete this row?')) {
-            button.closest('tr').remove();
+        function showCategory(categoryId, clickedTab) {
+            document.querySelectorAll('.category-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            const sectionToShow = document.getElementById(categoryId);
+            if (sectionToShow) sectionToShow.classList.add('active');
+            clickedTab.classList.add('active');
+        }
+
+        function addRow(button) {
+            const tableBody = button.closest('.problem-section').querySelector('tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td>
+                    <select class="status-select" onchange="updateRowStatus(this)">
+                        <option selected>Not Started</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                        <option>Needs Review</option>
+                    </select>
+                </td>
+                <td contenteditable="true"></td>
+                <td><button class="delete-row-btn" onclick="deleteRow(this)">Delete</button></td>
+            `;
+            newRow.classList.add('status-not-started');
+            newRow.cells[0].focus();
             updateStats();
         }
-    }
 
-    function updateStats() {
-        const totalProblems = document.querySelectorAll('.problem-table tbody tr').length;
-        const categoriesCount = document.querySelectorAll('.tabs .tab:not([onclick*="category-matrix"])').length;
-        const sectionsCount = document.querySelectorAll('.problem-section').length;
-        
-        let highPriorityCount = 0;
-        const priorityCells = document.querySelectorAll('.problem-table tbody td:nth-child(3)');
-        priorityCells.forEach(cell => {
-            if (cell.innerText.trim().toUpperCase() === 'DO FIRST') {
-                highPriorityCount++;
+        function deleteRow(button) {
+            if (confirm('Are you sure you want to delete this row?')) {
+                button.closest('tr').remove();
+                updateStats();
             }
-        });
-        
-        document.getElementById('totalProblemsStat').textContent = totalProblems;
-        document.getElementById('categoriesStat').textContent = categoriesCount;
-        document.getElementById('sectionsStat').textContent = sectionsCount;
-        document.getElementById('highPriorityStat').textContent = highPriorityCount;
-    }
+        }
+
+        function updateStats() {
+            const totalProblems = document.querySelectorAll('.problem-table tbody tr').length;
+            const categoriesCount = document.querySelectorAll('.tabs .tab:not([onclick*="category-matrix"])').length;
+            const sectionsCount = document.querySelectorAll('.problem-section').length;
+            
+            let highPriorityCount = 0;
+            const priorityCells = document.querySelectorAll('.problem-table tbody td:nth-child(3)');
+            priorityCells.forEach(cell => {
+                if (cell.innerText.trim().toUpperCase() === 'DO FIRST') {
+                    highPriorityCount++;
+                }
+            });
+            
+            document.getElementById('totalProblemsStat').textContent = totalProblems;
+            document.getElementById('categoriesStat').textContent = categoriesCount;
+            document.getElementById('sectionsStat').textContent = sectionsCount;
+            document.getElementById('highPriorityStat').textContent = highPriorityCount;
+        }
     </script>
 </body>
 </html>
